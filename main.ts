@@ -203,7 +203,7 @@ async function agentLLM(market: Market, liveData?: string): Promise<AgentResult>
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${OPENROUTER_KEY}`,
-          "HTTP-Referer": "https://prediction-oracle.deno.dev",
+          "HTTP-Referer": "https://pre-base-market.biosolverr.deno.net",
         },
         body: JSON.stringify({
           model: OR_MODEL_1,
@@ -224,7 +224,7 @@ async function agentLLM(market: Market, liveData?: string): Promise<AgentResult>
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${OPENROUTER_KEY}`,
-          "HTTP-Referer": "https://prediction-oracle.deno.dev",
+          "HTTP-Referer": "https://pre-base-market.biosolverr.deno.net",
         },
         body: JSON.stringify({
           model: OR_MODEL_2,
@@ -938,27 +938,6 @@ Deno.serve(async (req) => {
   // Health check
   if (path === "/health") return json({ ok: true, ts: Date.now() });
 
-  // Base App manifest (also used by Farcaster)
-  if (path === "/.well-known/farcaster.json") {
-    return json({
-      accountAssociation: {
-        header: "",
-        payload: "",
-        signature: ""
-      },
-      frame: {
-        version: "1",
-        name: "Prediction Market Oracle",
-        iconUrl: "https://prediction-oracle.deno.dev/icon.png",
-        homeUrl: "https://prediction-oracle.deno.dev",
-        imageUrl: "https://prediction-oracle.deno.dev",
-        buttonTitle: "Open Oracle",
-        splashImageUrl: "https://prediction-oracle.deno.dev",
-        splashBackgroundColor: "#0b0914",
-        webhookUrl: "https://prediction-oracle.deno.dev/api/webhook"
-      }
-    });
-  }
 
   // Frontend
   if (path === "/" || path === "") {
