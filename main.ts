@@ -469,7 +469,7 @@ function html(): string {
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;
-     line-height:1.5;min-height:100vh;padding-bottom:200px}
+     line-height:1.5;min-height:100vh;padding-bottom:20px}
 
 /* — Header — */
 .header{background:var(--surface);border-bottom:1px solid var(--border);
@@ -486,9 +486,15 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .stats b{color:var(--text)}
 
 /* — Layout — */
-.wrap{max-width:1400px;margin:0 auto;padding:20px}
-.grid{display:grid;grid-template-columns:340px 1fr;gap:20px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.wrap{max-width:1600px;margin:0 auto;padding:20px}
+/* Top row: 3 action panels horizontal */
+.actions-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+/* Middle row: market list left, detail right */
+.main-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+/* Info panel full width */
+.info-row{margin-bottom:16px}
+@media(max-width:1100px){.actions-row{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.actions-row{grid-template-columns:1fr}.main-row{grid-template-columns:1fr}}
 
 /* — Panels — */
 .panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
@@ -596,11 +602,11 @@ label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
            display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 
 /* — Logs — */
-.logs-panel{position:fixed;bottom:0;left:0;right:0;height:175px;background:#060410;
-            border-top:1px solid var(--border);display:flex;flex-direction:column;z-index:90}
-.logs-header{padding:7px 16px;background:var(--surface);border-bottom:1px solid var(--border);
-             display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
-.logs-body{flex:1;overflow-y:auto;padding:6px 16px;font-family:'Cascadia Code','SF Mono',monospace;font-size:11px}
+.logs-panel{background:var(--card);border:1px solid var(--border);border-radius:14px;
+            display:flex;flex-direction:column;max-height:220px;margin:0 20px 20px}
+.logs-header{padding:8px 14px;border-bottom:1px solid var(--border);
+             display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);border-radius:14px 14px 0 0}
+.logs-body{flex:1;overflow-y:auto;padding:6px 14px;font-family:'Cascadia Code','SF Mono',monospace;font-size:11px}
 .log-row{display:flex;gap:10px;padding:2px 0;border-bottom:1px solid #0c0920}
 .log-t{color:var(--accent);opacity:.7;white-space:nowrap}
 .log-a{color:var(--blue);font-weight:600;white-space:nowrap;min-width:120px}
@@ -661,10 +667,7 @@ window.dispatchEvent(new Event('viemReady'));
 <div class="header">
   <div class="logo">
     <h1>🔮 Prediction Oracle</h1>
-    <span class="tag">Multi-Agent Consensus</span>
-    <a class="genlayer-badge" href="https://genlayer.com" target="_blank" title="Inspired by GenLayer Intelligent Contracts">
-      Powered by GenLayer concept
-    </a>
+    <span class="tag">Multi-Agent Consensus · Base Mainnet</span>
   </div>
   <div style="display:flex;align-items:center;gap:16px">
     <div class="stats">
@@ -683,107 +686,106 @@ window.dispatchEvent(new Event('viemReady'));
 </div>
 
 <div class="wrap">
-  <div class="grid">
 
-    <!-- ─ Sidebar ─ -->
-    <div>
-      <!-- Create Market -->
-      <div class="panel">
-        <div class="panel-title">Create Market</div>
-        <label>Your address (connect wallet to auto-fill)</label>
-        <input id="c-creator" value="" placeholder="Connect wallet first..."/>
-        <label>Question</label>
-        <input id="c-question" placeholder="BTC > $100k by June 1 2025?"/>
-        <label>Category</label>
-        <select id="c-category">
-          <option value="crypto">Crypto</option>
-          <option value="sports">Sports</option>
-          <option value="politics">Politics</option>
-          <option value="custom">Custom</option>
-        </select>
-        <label>Description</label>
-        <textarea id="c-desc" placeholder="Detailed description of the market..."></textarea>
-        <label>Resolution rule (for agents)</label>
-        <input id="c-rule" placeholder='e.g. "price > $100000" or "team X wins"'/>
-        <label>Resolution date (UTC)</label>
-        <input id="c-date" type="datetime-local"/>
-        <button class="btn" onclick="createMarket()">Create Market</button>
-        <div id="c-msg"></div>
+  <!-- ─ Row 1: Action panels horizontal ─ -->
+  <div class="actions-row">
+
+    <!-- Create Market -->
+    <div class="panel">
+      <div class="panel-title">Create Market</div>
+      <label>Your address</label>
+      <input id="c-creator" value="" placeholder="Connect wallet to auto-fill..."/>
+      <label>Question</label>
+      <input id="c-question" placeholder="Will BTC exceed $100k by June 1?"/>
+      <label>Category</label>
+      <select id="c-category">
+        <option value="crypto">Crypto</option>
+        <option value="sports">Sports</option>
+        <option value="politics">Politics</option>
+        <option value="custom">Custom</option>
+      </select>
+      <label>Description</label>
+      <textarea id="c-desc" placeholder="Detailed description..." style="min-height:56px"></textarea>
+      <label>Resolution rule</label>
+      <input id="c-rule" placeholder='price > $100000'/>
+      <label>Resolution date (UTC)</label>
+      <input id="c-date" type="datetime-local"/>
+      <button class="btn" onclick="createMarket()">Create Market</button>
+      <div id="c-msg"></div>
+    </div>
+
+    <!-- Place Bet -->
+    <div class="panel">
+      <div class="panel-title">Place Bet</div>
+      <label>Market ID</label>
+      <input id="b-id" type="number" placeholder="0"/>
+      <label>Bettor address</label>
+      <input id="b-bettor" value="" placeholder="Connect wallet to auto-fill..."/>
+      <label>Position</label>
+      <div class="bet-builder">
+        <div class="pos-btn pos-yes active" id="pos-yes" onclick="selectPos('YES')">✅ YES</div>
+        <div class="pos-btn pos-no" id="pos-no" onclick="selectPos('NO')">❌ NO</div>
       </div>
+      <label>Amount (ETH)</label>
+      <input id="b-amount" type="number" step="0.001" placeholder="0.01"/>
+      <button class="btn" onclick="placeBetOnchain()" id="b-onchain-btn">⛓ Place Bet Onchain</button>
+      <button class="btn ghost" onclick="placeBet()" style="margin-top:6px">📋 Record Only (no ETH)</button>
+      <div id="b-msg"></div>
+    </div>
 
-      <!-- Place Bet -->
-      <div class="panel">
-        <div class="panel-title">Place Bet</div>
-        <label>Market ID</label>
-        <input id="b-id" type="number" placeholder="0"/>
-        <label>Bettor address (auto-filled from wallet)</label>
-        <input id="b-bettor" value="" placeholder="Connect wallet first..."/>
-        <label>Position</label>
-        <div class="bet-builder">
-          <div class="pos-btn pos-yes active" id="pos-yes" onclick="selectPos('YES')">✅ YES</div>
-          <div class="pos-btn pos-no" id="pos-no" onclick="selectPos('NO')">❌ NO</div>
+    <!-- Resolve + Contract Info -->
+    <div class="panel">
+      <div class="panel-title">Oracle Resolution</div>
+      <label>Market ID</label>
+      <input id="r-id" type="number" placeholder="0"/>
+      <label>Caller address</label>
+      <input id="r-caller" value="web" placeholder="your_address"/>
+      <button class="btn" id="r-btn" onclick="resolveMarket()">🤖 Run 3-Agent Consensus</button>
+      <div id="r-msg"></div>
+
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+        <div class="panel-title" style="margin-bottom:8px">Contract</div>
+        <div style="font-size:11px;color:var(--muted);line-height:2">
+          <div>Network: <b style="color:var(--green)">Base Mainnet</b></div>
+          <div>Address: <a href="https://basescan.org/address/0xC5794C686D677202474fF795847B6D82eADe98Da" target="_blank" style="color:var(--accent);word-break:break-all">0xC5794C...98Da ↗</a></div>
         </div>
-        <label>Amount (ETH)</label>
-        <input id="b-amount" type="number" step="0.001" placeholder="0.1"/>
-        <button class="btn" onclick="placeBetOnchain()" id="b-onchain-btn">⛓ Place Bet Onchain (ETH)</button>
-        <button class="btn ghost" onclick="placeBet()" style="margin-top:6px">📋 Record Only (no ETH)</button>
-        <div id="b-msg"></div>
-      </div>
-
-      <!-- Contract Info -->
-      <div class="panel">
-        <div class="panel-title">Contract Info</div>
-        <div style="font-size:11px;color:var(--muted);line-height:1.8">
-          <div>Network: <b style="color:var(--text)">Base Mainnet</b></div>
-          <div>Contract: <a href="https://basescan.org/address/0xC5794C686D677202474fF795847B6D82eADe98Da" target="_blank" style="color:var(--accent);font-size:10px;word-break:break-all">0xC5794C...98Da</a></div>
-          <div style="margin-top:6px">
-            <button class="btn ghost small" onclick="claimPayout()">💰 Claim Payout</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resolve -->
-      <div class="panel">
-        <div class="panel-title">Run Oracle Resolution</div>
-        <label>Market ID</label>
-        <input id="r-id" type="number" placeholder="0"/>
-        <label>Caller address</label>
-        <input id="r-caller" value="web" placeholder="your_address"/>
-        <button class="btn" id="r-btn" onclick="resolveMarket()">🤖 Run 3-Agent Consensus</button>
-        <div id="r-msg"></div>
+        <button class="btn ghost small" onclick="claimPayout()" style="margin-top:8px;width:100%">💰 Claim Payout</button>
       </div>
     </div>
 
-    <!-- ─ Main ─ -->
+  </div>
+
+  <!-- ─ Row 2: Markets list + Detail ─ -->
+  <div class="main-row">
+
+    <!-- Markets list -->
     <div>
-
-      <!-- Market list -->
-      <div>
-        <div class="list-head">
-          <h2>📊 All Markets</h2>
-          <div class="filters">
-            <select id="f-status" onchange="loadList()">
-              <option value="all">All</option>
-              <option value="open">Open</option>
-              <option value="locked">Locked</option>
-              <option value="resolving">Resolving</option>
-              <option value="resolved">Resolved</option>
-            </select>
-            <select id="f-cat" onchange="loadList()">
-              <option value="all">All Categories</option>
-              <option value="crypto">Crypto</option>
-              <option value="sports">Sports</option>
-              <option value="politics">Politics</option>
-              <option value="custom">Custom</option>
-            </select>
-            <button class="btn ghost small" onclick="loadList()">Refresh</button>
-          </div>
+      <div class="list-head">
+        <h2>📊 Markets</h2>
+        <div class="filters">
+          <select id="f-status" onchange="loadList()">
+            <option value="all">All</option>
+            <option value="open">Open</option>
+            <option value="locked">Locked</option>
+            <option value="resolving">Resolving</option>
+            <option value="resolved">Resolved</option>
+          </select>
+          <select id="f-cat" onchange="loadList()">
+            <option value="all">All</option>
+            <option value="crypto">Crypto</option>
+            <option value="sports">Sports</option>
+            <option value="politics">Politics</option>
+            <option value="custom">Custom</option>
+          </select>
+          <button class="btn ghost small" onclick="loadList()">↺</button>
         </div>
-        <div class="mkt-list" id="list"></div>
       </div>
+      <div class="mkt-list" id="list"></div>
+    </div>
 
-      <!-- Detail -->
-      <div class="detail" id="detail" style="display:none;margin-top:16px">
+    <!-- Detail -->
+    <div>
+      <div class="detail" id="detail" style="display:none">
         <h2>🔍 Market <span id="d-id"></span></h2>
         <div class="dg" id="d-grid"></div>
 
@@ -793,10 +795,7 @@ window.dispatchEvent(new Event('viemReady'));
         </div>
 
         <div id="d-agents-section" style="display:none;margin-top:16px">
-          <div class="panel-title" style="margin-bottom:8px">
-            Agent votes
-            <span class="genlayer-inline">GenLayer-style: 3 independent agents → majority consensus</span>
-          </div>
+          <div class="panel-title" style="margin-bottom:8px">Agent votes — 3 independent sources → majority</div>
           <div class="agents" id="d-agents"></div>
           <div class="consensus">
             <div>
@@ -805,14 +804,18 @@ window.dispatchEvent(new Event('viemReady'));
             </div>
             <div id="d-payouts"></div>
           </div>
-          <div class="genlayer-note">
-            ⚡ Agent 1 &amp; 2 fetch live data from CoinGecko &amp; Binance — Agent 3 (LLM) receives those prices as ground truth, not training memory.
-            Inspired by <a href="https://docs.genlayer.com" target="_blank">GenLayer Intelligent Contracts</a>.
-          </div>
+          <div class="genlayer-note">⚡ Agents 1 &amp; 2 fetch live prices from CoinGecko &amp; Binance — Agent 3 (LLM) uses those as ground truth.</div>
         </div>
       </div>
 
+      <!-- Empty state when no market selected -->
+      <div id="detail-empty" class="panel" style="text-align:center;padding:40px;color:var(--muted)">
+        <div style="font-size:32px;margin-bottom:10px">🔍</div>
+        <div style="font-size:14px">Click a market to see details</div>
+        <div style="font-size:12px;margin-top:6px;opacity:.6">Agent votes and payouts appear here after resolution</div>
+      </div>
     </div>
+
   </div>
 </div>
 
@@ -1149,6 +1152,7 @@ async function inspectMarket(id){
     const r=await fetch('/api/markets/'+id);const m=await r.json();
     if(m.error)return;
     $('detail').style.display='block';
+    if($('detail-empty'))$('detail-empty').style.display='none';
     $('d-id').innerHTML=badge(m.status);
 
     const total=(m.yes_pool+m.no_pool).toFixed(4);
