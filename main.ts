@@ -458,7 +458,7 @@ function html(): string {
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="base:app_id" content="6a00924bef4989446dc30c5b"/>
+<meta name="base:app_id" content="6a066f2858e95feb75311178"/>
 <title>Prediction Market Oracle</title>
 <style>
 :root{
